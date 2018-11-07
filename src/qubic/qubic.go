@@ -16,6 +16,8 @@ type Query struct {
 	Orb_desc []string
 }
 
+// Create new Query object.
+// It returns Query object itself ready to use for further query
 func NewQuery() *Query {
 	return &Query{
 		Sel:      []string{},
@@ -28,6 +30,9 @@ func NewQuery() *Query {
 	}
 }
 
+// Select query.
+// Given param as column name in string, many columns name in slice string
+// It returns Query object itself for further query
 func (q *Query) Select(s interface{}) *Query {
 	t := reflect.TypeOf(s)
 	switch t.Kind() {
@@ -39,6 +44,9 @@ func (q *Query) Select(s interface{}) *Query {
 	return q
 }
 
+// From query.
+// Given param as column name in string, many columns name in slice string
+// It returns Query object itself for further query
 func (q *Query) From(f interface{}) *Query {
 	t := reflect.TypeOf(f)
 	switch t.Kind() {
@@ -50,6 +58,11 @@ func (q *Query) From(f interface{}) *Query {
 	return q
 }
 
+// Where query.
+// Given param as:
+// 1. column name in string,
+// 2. value in string, uint, int, bool
+// It returns Query object itself for further query
 func (q *Query) Where(w string, s interface{}) *Query {
 	que := w
 	t := reflect.TypeOf(s)
@@ -83,6 +96,11 @@ func (q *Query) Where(w string, s interface{}) *Query {
 	return q
 }
 
+// Where in query.
+// Given param as:
+// 1. column name in string
+// 2. many values in slice string
+// It returns Query object itself for further query
 func (q *Query) Where_in(w string, s interface{}) *Query {
 	que := w
 	t := reflect.TypeOf(s)
@@ -102,6 +120,12 @@ func (q *Query) Where_in(w string, s interface{}) *Query {
 	return q
 }
 
+// Join query.
+// Given param as:
+// 1. table name in string
+// 2. condition in string
+// 3. join type (inner, right, left) join
+// It returns Query object itself for further query
 func (q *Query) Join(j string, c string, t string) *Query {
 	que := ""
 	switch t {
@@ -118,6 +142,9 @@ func (q *Query) Join(j string, c string, t string) *Query {
 	return q
 }
 
+// Group By query.
+// Given param as column name in string, many columns name in slice string
+// It returns Query object itself for further query
 func (q *Query) Groupby(s interface{}) *Query {
 	t := reflect.TypeOf(s)
 	switch t.Kind() {
@@ -129,6 +156,11 @@ func (q *Query) Groupby(s interface{}) *Query {
 	return q
 }
 
+// Orderby query.
+// Given param as:
+// 1. column name in string, many columns name in slice string
+// 2. order type (asc, desc)
+// It returns Query object itself for further query
 func (q *Query) Orderby(s interface{}, o string) *Query {
 	t := reflect.TypeOf(s)
 	switch o {
@@ -152,6 +184,8 @@ func (q *Query) Orderby(s interface{}, o string) *Query {
 	return q
 }
 
+// Extract query.
+// It returns Raw query from respective Query object
 func (q *Query) Extract(s *string) {
 	*s = `SELECT `
 	for k, v := range q.Sel {
