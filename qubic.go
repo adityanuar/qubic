@@ -206,7 +206,7 @@ func (q *Query) Extract(s *string) {
 	if len(q.Jo) > 0 {
 		*s += " "
 		for _, v := range q.Jo {
-			*s = *s + v
+			*s = *s + v + " "
 		}
 	}
 	if len(q.Wh) > 0 {
