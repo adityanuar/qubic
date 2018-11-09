@@ -1,7 +1,7 @@
 package qubic
 
 import (
-	"fmt"
+	// "fmt"
 	"reflect"
 	"strconv"
 )
@@ -14,6 +14,8 @@ type Query struct {
 	Gr       []string
 	Orb_asc  []string
 	Orb_desc []string
+	Lim      string
+	Off      string
 }
 
 // Create new Query object.
@@ -27,6 +29,8 @@ func NewQuery() *Query {
 		Gr:       []string{},
 		Orb_asc:  []string{},
 		Orb_desc: []string{},
+		Lim:      "",
+		Off:      "",
 	}
 }
 
@@ -70,7 +74,6 @@ func (q *Query) Where(w string, s interface{}) *Query {
 	case reflect.String:
 		que += " " + s.(string)
 	case reflect.Uint:
-		fmt.Println("unsigned")
 		que += " " + strconv.FormatUint(uint64(s.(uint)), 10)
 	case reflect.Uint8:
 		que += " " + strconv.FormatUint(uint64(s.(uint8)), 10)
@@ -89,7 +92,7 @@ func (q *Query) Where(w string, s interface{}) *Query {
 			que += " 1"
 		}
 	}
-	fmt.Println(t.Kind())
+	// fmt.Println(t.Kind())
 	if que != w {
 		q.Wh = append(q.Wh, que)
 	}
@@ -184,6 +187,49 @@ func (q *Query) Orderby(s interface{}, o string) *Query {
 	return q
 }
 
+// Limit query.
+// Given param as:
+// 1. total limit in string, uint, int
+// 2. offset limit in string, uint, int
+// It returns Query object itself for further query
+func (q *Query) Limit(l interface{}, o interface{}) *Query {
+	t := reflect.TypeOf(l)
+	switch t.Kind() {
+	case reflect.String:
+		q.Lim = l.(string)
+	case reflect.Uint:
+		q.Lim = strconv.FormatUint(uint64(l.(uint)), 10)
+	case reflect.Uint8:
+		q.Lim = strconv.FormatUint(uint64(l.(uint8)), 10)
+	case reflect.Uint16:
+		q.Lim = strconv.FormatUint(uint64(l.(uint16)), 10)
+	case reflect.Uint32:
+		q.Lim = strconv.FormatUint(uint64(l.(uint32)), 10)
+	case reflect.Uint64:
+		q.Lim = strconv.FormatUint(uint64(l.(uint64)), 10)
+	case reflect.Int:
+		q.Lim = strconv.Itoa(l.(int))
+	}
+	t2 := reflect.TypeOf(o)
+	switch t2.Kind() {
+	case reflect.String:
+		q.Off = o.(string)
+	case reflect.Uint:
+		q.Off = strconv.FormatUint(uint64(o.(uint)), 10)
+	case reflect.Uint8:
+		q.Off = strconv.FormatUint(uint64(o.(uint8)), 10)
+	case reflect.Uint16:
+		q.Off = strconv.FormatUint(uint64(o.(uint16)), 10)
+	case reflect.Uint32:
+		q.Off = strconv.FormatUint(uint64(o.(uint32)), 10)
+	case reflect.Uint64:
+		q.Off = strconv.FormatUint(uint64(o.(uint64)), 10)
+	case reflect.Int:
+		q.Off = strconv.Itoa(o.(int))
+	}
+	return q
+}
+
 // Extract query.
 // It returns Raw query from respective Query object
 func (q *Query) Extract(s *string) {
@@ -206,7 +252,7 @@ func (q *Query) Extract(s *string) {
 	if len(q.Jo) > 0 {
 		*s += " "
 		for _, v := range q.Jo {
-			*s = *s + v
+			*s = *s + v + " "
 		}
 	}
 	if len(q.Wh) > 0 {
@@ -248,5 +294,8 @@ func (q *Query) Extract(s *string) {
 				*s += v + " DESC"
 			}
 		}
+	}
+	if q.Lim != "" {
+		*s += " LIMIT " + q.Lim + " OFFSET " + q.Off
 	}
 }
