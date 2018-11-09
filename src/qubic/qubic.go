@@ -123,6 +123,42 @@ func (q *Query) Where_in(w string, s interface{}) *Query {
 	return q
 }
 
+// Like query.
+// Given param as:
+// 1. column name in string,
+// 2. value in string, uint, int,
+// 3. criterion in string,
+// It returns Query object itself for further query
+func (q *Query) Like(f string, v interface{}, c string) *Query {
+	value := ""
+	t := reflect.TypeOf(v)
+	switch t.Kind() {
+	case reflect.String:
+		value = v.(string)
+	case reflect.Uint:
+		value = strconv.FormatUint(uint64(v.(uint)), 10)
+	case reflect.Uint8:
+		value = strconv.FormatUint(uint64(v.(uint8)), 10)
+	case reflect.Uint16:
+		value = strconv.FormatUint(uint64(v.(uint16)), 10)
+	case reflect.Uint32:
+		value = strconv.FormatUint(uint64(v.(uint32)), 10)
+	case reflect.Uint64:
+		value = strconv.FormatUint(uint64(v.(uint64)), 10)
+	case reflect.Int:
+		value = strconv.Itoa(v.(int))
+	}
+	switch c {
+	case "both":
+		q.Wh = append(q.Wh, f+` LIKE '%`+value+`%'`)
+	case "before":
+		q.Wh = append(q.Wh, f+` LIKE '%`+value+`'`)
+	case "after":
+		q.Wh = append(q.Wh, f+` LIKE '`+value+`%'`)
+	}
+	return q
+}
+
 // Join query.
 // Given param as:
 // 1. table name in string
