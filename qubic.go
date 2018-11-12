@@ -65,6 +65,7 @@ func (q *Query) From(f interface{}) *Query {
 // Given param as:
 // 1. column name in string,
 // 2. value in string, uint, int, bool
+// 3. escape string in bool
 // It returns Query object itself for further query
 func (q *Query) Where(w string, s interface{}, e bool) *Query {
 	que := w
