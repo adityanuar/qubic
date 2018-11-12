@@ -71,19 +71,19 @@ func (q *Query) Where(w string, s interface{}) *Query {
 	t := reflect.TypeOf(s)
 	switch t.Kind() {
 	case reflect.String:
-		que += " " + s.(string)
+		que += " '" + s.(string) + "'"
 	case reflect.Uint:
-		que += " " + strconv.FormatUint(uint64(s.(uint)), 10)
+		que += " '" + strconv.FormatUint(uint64(s.(uint)), 10) + "'"
 	case reflect.Uint8:
-		que += " " + strconv.FormatUint(uint64(s.(uint8)), 10)
+		que += " '" + strconv.FormatUint(uint64(s.(uint8)), 10) + "'"
 	case reflect.Uint16:
-		que += " " + strconv.FormatUint(uint64(s.(uint16)), 10)
+		que += " '" + strconv.FormatUint(uint64(s.(uint16)), 10) + "'"
 	case reflect.Uint32:
-		que += " " + strconv.FormatUint(uint64(s.(uint32)), 10)
+		que += " '" + strconv.FormatUint(uint64(s.(uint32)), 10) + "'"
 	case reflect.Uint64:
-		que += " " + strconv.FormatUint(uint64(s.(uint64)), 10)
+		que += " '" + strconv.FormatUint(uint64(s.(uint64)), 10) + "'"
 	case reflect.Int:
-		que += " " + strconv.Itoa(s.(int))
+		que += " '" + strconv.Itoa(s.(int)) + "'"
 	case reflect.Bool:
 		if s == false {
 			que += " 0"
@@ -91,6 +91,7 @@ func (q *Query) Where(w string, s interface{}) *Query {
 			que += " 1"
 		}
 	}
+	// fmt.Println(t.Kind())
 	if que != w {
 		q.Wh = append(q.Wh, que)
 	}
