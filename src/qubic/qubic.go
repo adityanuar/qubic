@@ -66,25 +66,32 @@ func (q *Query) From(f interface{}) *Query {
 // Given param as:
 // 1. column name in string,
 // 2. value in string, uint, int, bool
+// 3. escape string in bool
 // It returns Query object itself for further query
-func (q *Query) Where(w string, s interface{}) *Query {
+func (q *Query) Where(w string, s interface{}, e bool) *Query {
 	que := w
 	t := reflect.TypeOf(s)
+	var escape string
+	if e {
+		escape = "'"
+	} else {
+		escape = ""
+	}
 	switch t.Kind() {
 	case reflect.String:
-		que += " '" + s.(string) + "'"
+		que += " " + escape + s.(string) + escape
 	case reflect.Uint:
-		que += " '" + strconv.FormatUint(uint64(s.(uint)), 10) + "'"
+		que += " " + escape + strconv.FormatUint(uint64(s.(uint)), 10) + escape
 	case reflect.Uint8:
-		que += " '" + strconv.FormatUint(uint64(s.(uint8)), 10) + "'"
+		que += " " + escape + strconv.FormatUint(uint64(s.(uint8)), 10) + escape
 	case reflect.Uint16:
-		que += " '" + strconv.FormatUint(uint64(s.(uint16)), 10) + "'"
+		que += " " + escape + strconv.FormatUint(uint64(s.(uint16)), 10) + escape
 	case reflect.Uint32:
-		que += " '" + strconv.FormatUint(uint64(s.(uint32)), 10) + "'"
+		que += " " + escape + strconv.FormatUint(uint64(s.(uint32)), 10) + escape
 	case reflect.Uint64:
-		que += " '" + strconv.FormatUint(uint64(s.(uint64)), 10) + "'"
+		que += " " + escape + strconv.FormatUint(uint64(s.(uint64)), 10) + escape
 	case reflect.Int:
-		que += " '" + strconv.Itoa(s.(int)) + "'"
+		que += " " + escape + strconv.Itoa(s.(int)) + escape
 	case reflect.Bool:
 		if s == false {
 			que += " 0"
