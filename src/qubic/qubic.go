@@ -106,6 +106,15 @@ func (q *Query) Where(w string, s interface{}, e bool) *Query {
 	return q
 }
 
+// Raw Where query.
+// Given param as:
+// 1. raw condition in string,
+// It returns Query object itself for further query
+func (q *Query) Where_raw(w string) *Query {
+	q.Wh = append(q.Wh, w)
+	return q
+}
+
 // Where in query.
 // Given param as:
 // 1. column name in string
