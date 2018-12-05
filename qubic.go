@@ -1,6 +1,7 @@
 package qubic
 
 import (
+	// "fmt"
 	"reflect"
 	"strconv"
 )
@@ -102,6 +103,15 @@ func (q *Query) Where(w string, s interface{}, e bool) *Query {
 	if que != w {
 		q.Wh = append(q.Wh, que)
 	}
+	return q
+}
+
+// Raw Where query.
+// Given param as:
+// 1. raw condition in string,
+// It returns Query object itself for further query
+func (q *Query) Where_raw(w string) *Query {
+	q.Wh = append(q.Wh, w)
 	return q
 }
 
